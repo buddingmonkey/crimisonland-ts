@@ -2,7 +2,7 @@
 
 A faithful TypeScript/PixiJS recreation of **Crimsonland** (2003), the classic top-down survival shooter.
 
-🎮 **Play**: https://andreweiche.github.io/crimsonland-2003-ts/
+🎮 **Play**: https://buddingmonkey.github.io/crimisonland-ts/
 
 ## About
 

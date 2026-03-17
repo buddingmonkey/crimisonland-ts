@@ -3,6 +3,7 @@ import type { UserConfig } from 'vitest/config';
 import { resolve } from 'path';
 
 export default defineConfig({
+    base: process.env.VITE_BASE || '/',
     resolve: {
         alias: {
             '@': resolve(__dirname, './src'),

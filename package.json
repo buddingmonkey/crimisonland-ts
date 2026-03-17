@@ -22,7 +22,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/aeiche/crimsonland-2003-ts.git"
+    "url": "https://github.com/buddingmonkey/crimisonland-ts.git"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
