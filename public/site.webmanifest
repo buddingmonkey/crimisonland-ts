@@ -1,0 +1,27 @@
+{
+  "name": "Crimsonland 2003 — TypeScript Remake",
+  "short_name": "Crimsonland",
+  "description": "A faithful TypeScript/PixiJS recreation of Crimsonland (2003), the classic top-down survival shooter by 10tons Ltd.",
+  "start_url": "/crimsonland-2003-ts/",
+  "scope": "/crimsonland-2003-ts/",
+  "display": "fullscreen",
+  "background_color": "#000000",
+  "theme_color": "#cc2222",
+  "icons": [
+    {
+      "src": "favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

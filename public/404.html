@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crimsonland 2003 — Page Not Found</title>
+  <meta name="robots" content="noindex" />
+  <script>
+    // GitHub Pages SPA redirect:
+    // Store the path and redirect to root so the SPA router can handle it.
+    sessionStorage.setItem('gh-pages-redirect', location.pathname + location.search + location.hash);
+    location.replace(location.origin + '/crimsonland-2003-ts/');
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0a0a;
+      color: #e0e0e0;
+      font-family: 'Inter', system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+    .container { max-width: 400px; padding: 2rem; }
+    h1 { font-size: 4rem; color: #cc2222; margin-bottom: 0.5rem; }
+    p { color: #999; margin-bottom: 1.5rem; }
+    a {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      background: #cc2222;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    a:hover { background: #e02828; }
+  </style>
+</head>
+
+<body>
+  <noscript>
+    <div class="container">
+      <h1>404</h1>
+      <p>This page doesn't exist. The game lives at the root URL.</p>
+      <a href="/crimsonland-2003-ts/">Back to Game</a>
+    </div>
+  </noscript>
+</body>
+
+</html>

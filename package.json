@@ -1,0 +1,42 @@
+{
+  "name": "crimsonland-2003-ts",
+  "version": "1.0.0",
+  "description": "A faithful TypeScript/PixiJS recreation of Crimsonland (2003), the top-down survival shooter by 10tons Ltd.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
+  },
+  "keywords": [
+    "game",
+    "crimsonland",
+    "pixijs"
+  ],
+  "author": "Andrew Eiche and Google Antigravity",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aeiche/crimsonland-2003-ts.git"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^20.11.0",
+    "@types/pako": "^2.0.4",
+    "@vitest/coverage-v8": "^1.6.1",
+    "prettier": "^3.8.1",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.12",
+    "vitest": "^1.2.2"
+  },
+  "dependencies": {
+    "@pixi/devtools": "^2.0.1",
+    "pako": "^2.1.0",
+    "pixi.js": "^8.15.0"
+  }
+}

@@ -1,0 +1,18 @@
+# Crimsonland 2003 – GitHub Pages
+# https://aeiche.github.io/crimsonland-2003-ts/
+
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /assets/
+
+# Block build artifacts and chunks that aren't useful to index
+Disallow: /assets/*.js
+Disallow: /assets/*.css
+Disallow: /assets/*.map
+
+# Crawl-delay suggestion for polite bots
+Crawl-delay: 10
+
+# Sitemap
+Sitemap: https://andreweiche.github.io/crimsonland-2003-ts/sitemap.xml

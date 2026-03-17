@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crimsonland 2003 — Play the TypeScript Remake</title>
+
+  <!-- SEO basics -->
+  <meta name="description" content="A faithful TypeScript/PixiJS recreation of Crimsonland (2003), the classic top-down survival shooter by 10tons Ltd. All 56 perks, 22 weapons, and 40 quests — playable in the browser." />
+  <meta name="keywords" content="Crimsonland, Crimsonland 2003, top-down shooter, survival shooter, browser game, TypeScript game, PixiJS, retro game, 10tons" />
+  <meta name="author" content="Andrew Eiche and Google Antigravity" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://andreweiche.github.io/crimsonland-2003-ts/" />
+
+  <!-- Open Graph (Facebook, Discord, Slack, etc.) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Crimsonland 2003 — TypeScript Remake" />
+  <meta property="og:description" content="A faithful TypeScript/PixiJS recreation of Crimsonland (2003). 56 perks, 22 weapons, 40 quests — play in your browser." />
+  <meta property="og:url" content="https://andreweiche.github.io/crimsonland-2003-ts/" />
+  <meta property="og:image" content="https://andreweiche.github.io/crimsonland-2003-ts/og-banner.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="Crimsonland 2003" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Crimsonland 2003 — TypeScript Remake" />
+  <meta name="twitter:description" content="A faithful TypeScript/PixiJS recreation of Crimsonland (2003). 56 perks, 22 weapons, 40 quests — play in your browser." />
+  <meta name="twitter:image" content="https://andreweiche.github.io/crimsonland-2003-ts/og-banner.png" />
+
+  <!-- Theme & Icons -->
+  <meta name="theme-color" content="#cc2222" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #000;
+      overflow: hidden;
+      cursor: none;
+    }
+
+    canvas {
+      display: block;
+      cursor: none;
+    }
+
+    /* ── Asset Upload Screen ── */
+    #upload-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0a0a0a;
+      font-family: 'Inter', sans-serif;
+      color: #e0e0e0;
+      overflow-y: auto;
+    }
+
+    .upload-content {
+      text-align: center;
+      max-width: 480px;
+      width: 90%;
+      padding: 2rem 1rem;
+    }
+
+    .upload-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .upload-year {
+      color: #cc2222;
+      font-weight: 400;
+    }
+
+    .upload-subtitle {
+      color: #999;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Single drop zone */
+    .drop-zone {
+      position: relative;
+      padding: 2.5rem 1.5rem;
+      border: 2px dashed #333;
+      border-radius: 12px;
+      background: #111;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s, box-shadow 0.2s;
+      margin-bottom: 1.5rem;
+    }
+
+    .drop-zone:hover {
+      border-color: #555;
+      background: #161616;
+      transform: translateY(-2px);
+    }
+
+    .drop-zone.dragover {
+      border-color: #cc2222;
+      background: rgba(204, 34, 34, 0.08);
+      box-shadow: 0 0 24px rgba(204, 34, 34, 0.15);
+    }
+
+    .drop-zone.error {
+      border-color: #cc2222;
+    }
+
+    .drop-zone-icon {
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .drop-zone-text {
+      font-size: 0.95rem;
+      color: #ccc;
+      margin-bottom: 0.3rem;
+    }
+
+    .drop-zone-hint {
+      font-size: 0.8rem;
+      color: #555;
+    }
+
+    .drop-zone-input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* File checklist */
+    .file-checklist {
+      text-align: left;
+      margin: 0 auto 1.5rem;
+      max-width: 320px;
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      margin-bottom: 0.35rem;
+      transition: background 0.2s;
+    }
+
+    .file-icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      width: 1.4rem;
+      text-align: center;
+      color: #555;
+    }
+
+    .file-name {
+      font-family: monospace;
+      font-size: 0.9rem;
+      color: #aaa;
+      flex-shrink: 0;
+    }
+
+    .file-status {
+      font-size: 0.8rem;
+      color: #666;
+      margin-left: auto;
+    }
+
+    .file-item.valid {
+      background: rgba(42, 142, 42, 0.08);
+    }
+
+    .file-item.valid .file-icon {
+      color: #3cb043;
+    }
+
+    .file-item.valid .file-name {
+      color: #ddd;
+    }
+
+    .file-item.valid .file-status {
+      color: #6d9e6d;
+    }
+
+    .file-item.warning {
+      background: rgba(204, 170, 34, 0.08);
+    }
+
+    .file-item.warning .file-icon {
+      color: #ccaa22;
+    }
+
+    .file-item.warning .file-name {
+      color: #ddd;
+    }
+
+    .file-item.warning .file-status {
+      color: #b89e30;
+    }
+
+    .file-item.error {
+      background: rgba(204, 34, 34, 0.08);
+    }
+
+    .file-item.error .file-icon {
+      color: #cc2222;
+    }
+
+    .file-item.error .file-status {
+      color: #cc2222;
+    }
+
+    /* CRC warning banner */
+    .upload-warning {
+      font-size: 0.85rem;
+      color: #ccaa22;
+      background: rgba(204, 170, 34, 0.08);
+      border: 1px solid rgba(204, 170, 34, 0.2);
+      border-radius: 8px;
+      padding: 0.65rem 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    /* Start button */
+    .upload-start {
+      display: inline-block;
+      padding: 0.85rem 2.5rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      background: #cc2222;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s, opacity 0.2s;
+    }
+
+    .upload-start:hover:not(:disabled) {
+      background: #e02828;
+      transform: translateY(-1px);
+    }
+
+    .upload-start:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .upload-start:disabled {
+      background: #333;
+      color: #666;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+
+<body>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>
