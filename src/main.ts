@@ -62,6 +62,10 @@ async function main() {
         }
     }
 
+    // Hide the browser cursor now that assets are resolved and gameplay is about to start.
+    // The cursor stays visible while the upload screen is shown so users can interact with it.
+    document.body.style.cursor = 'none';
+
     const game = new Game(preloadedAssets);
 
     // Expose game bridge for Playwright E2E tests
