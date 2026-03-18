@@ -286,10 +286,10 @@ export class QuestCompleteScreen {
                         this.animStep = 1;
                     }
                 } else if (this.animStep === 1) {
-                    // Damage Taken: increment by 1000ms each tick, 150ms delay (C: 0x96 = 150)
-                    this.lifeBonusDisplay += 1000;
-                    this.animDelayMs = 150;
-                    this.scoreDisplay -= 1000;
+                    // Life Bonus: increment by 500ms each tick, 50ms delay (faster animation)
+                    this.lifeBonusDisplay += 500;
+                    this.animDelayMs = 50;
+                    this.scoreDisplay -= 500;
                     // C quest.c:328 — sfx_play(sfx_ui_clink_01) on each tick
                     this.soundSystem?.play(SoundId.UI_CLINK_01);
                     if (data.lifeBonusMs <= this.lifeBonusDisplay) {

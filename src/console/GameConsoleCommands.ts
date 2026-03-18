@@ -483,7 +483,7 @@ export function registerGameCommands(ctx: GameCommandContext): void {
         // Show quest complete screen with dummy data for testing
         ctx.getQuestCompleteScreen().show({
             baseTimeMs: 60000, // 1:00
-            lifeBonusMs: 100000, // Full health (100 * 1000)
+            lifeBonusMs: 10000, // Full health (100 * 100, 10% scaling)
             unpickedPerks: 0,
             finalTimeMs: 60000, // 1:00
             questName: 'Test Quest',

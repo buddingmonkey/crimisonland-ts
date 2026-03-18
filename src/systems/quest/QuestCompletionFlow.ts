@@ -92,10 +92,10 @@ export function handleQuestCompletion(ctx: QuestFlowContext): void {
     // C: final_score = quest_spawn_timeline - life_bonus - (unpicked_perks * 1000)
     // Lower final time = better score (completed quest faster, with more health)
     const baseTimeMs = questSystem.getTimelineMs();
-    // C: quest.c:337-353 — "Life Bonus" = health * 1000
-    // Remaining health converts to a time bonus: full health (100) subtracts 100s,
+    // Life Bonus = health * 100 (10% of original C scaling)
+    // Remaining health converts to a time bonus: full health (100) subtracts 10s,
     // making the final time lower (better). Low health = small bonus = worse score.
-    const lifeBonusMs = player ? Math.max(0, Math.floor(player.health) * 1000) : 0;
+    const lifeBonusMs = player ? Math.max(0, Math.floor(player.health) * 100) : 0;
     const unpickedPerks = ctx.perkPendingCount;
     const finalTimeMs = Math.max(1, baseTimeMs - lifeBonusMs - unpickedPerks * 1000);
 
