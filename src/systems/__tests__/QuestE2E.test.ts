@@ -385,7 +385,11 @@ describe('Quest full lifecycle — all 50 quests drain to completion', () => {
         (tier, index, _name) => {
             const t = tier as number;
             const i = index as number;
-            const spawnCallback = vi.fn();
+
+            // Spawn callback must call reportEnemySpawned so spawns are consumed.
+            const spawnCallback = vi.fn((_entry: any) => {
+                questSystem.reportEnemySpawned(1);
+            });
             questSystem.setSpawnCallback(spawnCallback);
 
             const result = questSystem.startQuest(t, i);
@@ -410,8 +414,14 @@ describe('Quest full lifecycle — all 50 quests drain to completion', () => {
                 expect(spawnCallback).toHaveBeenCalled();
             }
 
-            // Advance to trigger transition
-            questSystem.update(100);
+            // Kill all active enemies so completion check passes
+            const active = questSystem.getActiveEnemyCount();
+            for (let e = 0; e < active; e++) {
+                questSystem.reportEnemyKilled();
+            }
+
+            // checkCompletion() is called externally (deferred check)
+            questSystem.checkCompletion();
             expect(questSystem.getState()).toBe(QuestState.TRANSITIONING);
 
             // Complete transition
@@ -583,14 +593,30 @@ describe('Quest completion — Level Complete overlay and sound sequence', () =>
     /**
      * Helper: drain all spawns and enter the TRANSITIONING state.
      * Uses Quest 1-1 "Land Hostile" which has 4 batches at 500/2500/6500/11500ms.
+     *
+     * Spawns must call reportEnemySpawned so entries are consumed,
+     * then we kill all enemies and call checkCompletion() (deferred check).
      */
     function drainToTransition(qs: QuestSystem): void {
+        // Register a callback that reports spawns so entries are consumed
+        qs.setSpawnCallback((_entry: any) => {
+            qs.reportEnemySpawned(1);
+        });
+
         qs.startQuest(1, 1);
         qs.update(600);   // triggers 500ms batch
         qs.update(2000);  // triggers 2500ms batch
         qs.update(4000);  // triggers 6500ms batch
         qs.update(5000);  // triggers 11500ms batch
-        qs.update(100);   // all spawned, no enemies → starts transition
+
+        // Kill all active enemies so completion check passes
+        const active = qs.getActiveEnemyCount();
+        for (let e = 0; e < active; e++) {
+            qs.reportEnemyKilled();
+        }
+
+        // checkCompletion() is called externally, not inside update()
+        qs.checkCompletion();
         expect(qs.getState()).toBe(QuestState.TRANSITIONING);
     }
 

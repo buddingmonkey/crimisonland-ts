@@ -37,10 +37,14 @@ const mockAudioContext = {
     decodeAudioData: vi.fn().mockResolvedValue(mockAudioBuffer),
 };
 
-// Mock global AudioContext
+// Mock global AudioContext — must use a regular function (not arrow)
+// because arrow functions cannot be called with `new`.
 vi.stubGlobal(
     'AudioContext',
-    vi.fn(() => mockAudioContext),
+    vi.fn(function (this: any) {
+        Object.assign(this, mockAudioContext);
+        return this;
+    }),
 );
 
 describe('SoundSystem', () => {

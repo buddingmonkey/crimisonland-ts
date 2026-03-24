@@ -1,5 +1,4 @@
-import { defineConfig } from 'vite';
-import type { UserConfig } from 'vitest/config';
+import { defineConfig } from 'vitest/config';
 import { resolve } from 'path';
 
 export default defineConfig({
@@ -19,9 +18,9 @@ export default defineConfig({
         chunkSizeWarningLimit: 900,
         rollupOptions: {
             output: {
-                manualChunks: {
-                    pixi: ['pixi.js'],
-                    vendor: ['pako'],
+                manualChunks(id: string) {
+                    if (id.includes('node_modules/pixi')) return 'pixi';
+                    if (id.includes('node_modules/pako')) return 'vendor';
                 },
             },
         },
@@ -33,5 +32,5 @@ export default defineConfig({
             include: ['src/**/*.ts'],
             exclude: ['src/**/__tests__/**', 'src/**/*.test.ts'],
         },
-    } satisfies UserConfig['test'],
+    },
 });
