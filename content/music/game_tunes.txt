@@ -1,0 +1,6 @@
+// These commands are run at music load time
+// You can load your own custom tunes simply by adding/editing
+// this file. The game selects and plays a random tune from given oggs.
+// Only Ogg Vorbis format is supported.
+snd_addGameTune gt1_ingame.ogg
+snd_addGameTune gt2_harppen.ogg

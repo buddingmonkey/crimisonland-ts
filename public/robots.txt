@@ -11,6 +11,9 @@ Disallow: /assets/*.js
 Disallow: /assets/*.css
 Disallow: /assets/*.map
 
+# Block music files from being indexed
+Disallow: /content/music/
+
 # Crawl-delay suggestion for polite bots
 Crawl-delay: 10
 

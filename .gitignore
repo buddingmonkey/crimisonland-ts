@@ -27,5 +27,7 @@ Thumbs.db
 .env.local
 
 # Copyrighted game assets (not for public distribution)
-content/
+# Use content/* (not content/) so the negation for music/ works —
+# a trailing-slash ignore prevents git from descending into the dir at all.
+content/*
 !content/music/
