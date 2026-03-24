@@ -264,7 +264,7 @@ function drawBulletProjectile(
         grim.setUV(0, 0, 1, 1);
     }
 
-    grim.setRotation(proj.angle);
+    grim.setRotation(proj.angle + Math.PI / 2);
     const half = bulletSize / 2;
     grim.drawQuad(proj.x - half, proj.y - half, bulletSize, bulletSize);
     grim.setRotation(0);
