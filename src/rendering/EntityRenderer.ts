@@ -128,8 +128,9 @@ export function drawPlayerTwoLayer(
 
 
 
-    const weaponOffsetX = Math.cos(aimAngle) * muzzleFlashAlpha * 4.0;
-    const weaponOffsetY = Math.sin(aimAngle) * muzzleFlashAlpha * 4.0;
+    // C: cos/sin(aim_heading + PI/2) = -cos/-sin(aimAngle) → recoil pushes BACKWARD
+    const weaponOffsetX = -Math.cos(aimAngle) * muzzleFlashAlpha * 4.0;
+    const weaponOffsetY = -Math.sin(aimAngle) * muzzleFlashAlpha * 4.0;
 
     const halfSize = playerSize * 0.5;
 
@@ -243,9 +244,10 @@ export function drawPlayerTwoLayer(
         // Must match weapon layer rotation (line 183) so the flash aligns with the barrel
         grim.setRotation(aimAngle + Math.PI / 2);
 
-        // Offset muzzle flash along the aim direction toward the gun barrel
-        // C: cos/sin(aim_heading + PI/2) = cos/sin(aimAngle + PI) = -cos/-sin(aimAngle)
-        // This pushes the flash quad center slightly backward (recoil direction)
+        // Offset muzzle flash to gun barrel tip:
+        // Constant forward offset (playerSize * 0.5) places the flash at the gun tip,
+        // then a small backward recoil offset based on muzzleFlashAlpha.
+        // C: cos/sin(aim_heading + PI/2) = -cos/-sin(aimAngle) for recoil direction.
         const cosAim = Math.cos(aimAngle);
         const sinAim = Math.sin(aimAngle);
 
@@ -260,8 +262,11 @@ export function drawPlayerTwoLayer(
             flashDrawSize = playerSize;
         }
 
-        const flashX = x - flashHalf + cosAim * muzzleFlashAlpha * 12.0;
-        const flashY = y - flashHalf + sinAim * muzzleFlashAlpha * 12.0;
+        // Forward offset to gun tip + small backward recoil
+        const gunTipOffset = playerSize * 0.5;
+        const recoilOffset = -muzzleFlashAlpha * 4.0;
+        const flashX = x - flashHalf + cosAim * (gunTipOffset + recoilOffset);
+        const flashY = y - flashHalf + sinAim * (gunTipOffset + recoilOffset);
         grim.drawQuad(flashX, flashY, flashDrawSize, flashDrawSize);
 
         grim.setBlendMode('normal');
