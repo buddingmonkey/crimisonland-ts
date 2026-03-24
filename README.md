@@ -101,4 +101,5 @@ npm run build
 ## Credits
 
 - Original game by **10tons Ltd** (2003)
+- [Decompilation](https://github.com/banteg/crimson/tree/master/analysis/ghidra/raw) by **Banteg**
 - TypeScript port by **Andrew Eiche and Google Antigravity**
