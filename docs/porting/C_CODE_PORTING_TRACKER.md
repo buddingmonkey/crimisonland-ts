@@ -857,14 +857,15 @@ This file tracks all C code that has been ported to TypeScript, organized by sys
 | Score display on quest complete screen | - | ✅ Complete |
 
 ### Empty Clip Firing System
-**Status**: ⏸️ Deferred - No C code found, mechanics unclear
+**Status**: ✅ Complete + Integrated
+**Files**: [`WeaponSystem.ts`](src/systems/combat/WeaponSystem.ts), [`PerkSystem.ts`](src/systems/PerkSystem.ts)
 
 | Feature | C Lines | Status |
 |---------|---------|--------|
-| Ammunition Within (fire with empty clip) | 25887-25890 | ⏸️ Deferred |
-| Regression Bullets (reverse projectiles) | Unknown | ⏸️ Deferred |
+| Ammunition Within (fire with empty clip) | 25887-25890 | ✅ Complete |
+| Regression Bullets (fire with empty clip) | - | ✅ Complete |
 
-**Reason**: Cannot locate C implementation or verify mechanics. Perk IDs confirmed but behavior unknown.
+**Implementation Notes**: Both perks allow firing with an empty clip, bypassing reload. XP > 0 guard matches C behavior. E2E tests in `PerkE2E.test.ts`.
 
 ### Quick Win Perks
 **Status**: ✅ Complete + Integrated
@@ -1129,10 +1130,10 @@ The following systems were completed during perk implementation:
 - ✅ **Burning DOT** - 180 DPS via flags in `EnemySystemsUpdate.ts` (C creature_update_all lines 1130-1145)
 - ✅ **Poison DOT** - 60 DPS via flags in `EnemySystemsUpdate.ts` (C creature_update_all lines 1130-1145)
 
-**Remaining Stubs** (no C code found):
-- ⏸️ **Empty Clip Firing** - No C code found (Ammunition Within, Regression Bullets)
-- ⏸️ **Weapon Slot System** - No C code found (Alternate Weapon)
-- ⏸️ **Infernal Contract** - No C code found (health drain/power boost)
+**Previously Stubbed, Now Implemented** (2026-03-24):
+- ✅ **Empty Clip Firing** - Implemented in `WeaponSystem.ts` (Ammunition Within, Regression Bullets perks)
+- ✅ **Weapon Slot System** - Implemented in `Player.ts` (Alternate Weapon perk with `swapWeapon()` 8-field swap + 200ms cooldown)
+- ✅ **Infernal Contract** - Implemented in `PerkEffectApplicator.ts` / `PlayerModifier.ts` (+3 levels, +3 pending perks, health → 0.1)
 
 ---
 
