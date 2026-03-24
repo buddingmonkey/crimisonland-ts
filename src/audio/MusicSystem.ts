@@ -112,7 +112,7 @@ export class MusicSystem {
 
         try {
             // Load the game_tunes.txt file
-            const response = await fetch('/content/music/game_tunes.txt');
+            const response = await fetch(`${import.meta.env.BASE_URL}content/music/game_tunes.txt`);
             const text = await response.text();
 
             // Parse all snd_addGameTune commands first, then load in parallel
@@ -140,7 +140,7 @@ export class MusicSystem {
         }
 
         try {
-            const path = `/content/music/${filename}`;
+            const path = `${import.meta.env.BASE_URL}content/music/${filename}`;
             const response = await fetch(path);
 
             if (!response.ok) {
@@ -175,7 +175,7 @@ export class MusicSystem {
         }
 
         try {
-            const path = `/content/music/${filename}`;
+            const path = `${import.meta.env.BASE_URL}content/music/${filename}`;
             const response = await fetch(path);
 
             if (!response.ok) {

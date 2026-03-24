@@ -20,7 +20,7 @@ import { trackAssetUploadStart, trackAssetUploadComplete } from './analytics/Ana
  */
 async function hasDevServerAssets(): Promise<boolean> {
     try {
-        const response = await fetch('/content/crimson.paq', { method: 'HEAD' });
+        const response = await fetch(`${import.meta.env.BASE_URL}content/crimson.paq`, { method: 'HEAD' });
         return response.ok;
     } catch {
         return false;
