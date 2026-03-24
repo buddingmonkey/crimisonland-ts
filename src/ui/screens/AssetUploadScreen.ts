@@ -72,6 +72,32 @@ export function showUploadScreen(): Promise<UploadResult> {
                     <input type="file" class="drop-zone-input" id="file-input" multiple accept=".paq" />
                 </div>
 
+                <p class="upload-purchase-info">
+                    If you do not have the original .paq files you can purchase the game on
+                    <a href="https://www.gog.com/en/game/crimsonland" target="_blank" rel="noopener noreferrer">GOG</a>.
+                    Once you have purchased the game, see
+                    <a href="#" id="open-guide-link">this guide</a>
+                    for instructions on how to find the .paq files.
+                </p>
+
+                <!-- Guide Modal -->
+                <div class="guide-modal-overlay" id="guide-modal" style="display:none">
+                    <div class="guide-modal">
+                        <button class="guide-modal-close" id="guide-modal-close" aria-label="Close">&times;</button>
+                        <h2 class="guide-modal-title">Finding the PAQ Files</h2>
+                        <div class="guide-modal-body">
+                            <p>You must install <strong>Crimsonland Classic</strong> from GOG (not the remake).</p>
+                            <ol>
+                                <li>In the <a href="https://www.gog.com/en/game/crimsonland" target="_blank" rel="noopener noreferrer">GOG web page</a> or <strong>GOG Galaxy</strong> interface, navigate to your games and open the Crimsonland page.</li>
+                                <li>Select the <strong>Extras</strong> tab and download <strong>&ldquo;Crimsonland &ndash; Crimsonland Classic&rdquo;</strong>.</li>
+                                <li>Run the installer: <code>setup_crimsonland_classic_2.0.0.4.exe</code></li>
+                                <li>When installation completes, open the folder you selected during setup.<br/>Typically: <code>C:\GOG Games\Crimsonland Classic</code></li>
+                                <li>The <code>crimson.paq</code> and <code>sfx.paq</code> files will be in that folder.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="file-checklist" id="file-checklist">
                     <div class="file-item" id="item-crimson" data-file="crimson.paq">
                         <span class="file-icon">☐</span>
@@ -101,6 +127,24 @@ export function showUploadScreen(): Promise<UploadResult> {
         const fileInput = container.querySelector('#file-input') as HTMLInputElement;
         const btnStart = container.querySelector('#btn-start') as HTMLButtonElement;
         const crcWarning = container.querySelector('#crc-warning') as HTMLElement;
+
+        // Guide modal
+        const guideModal = container.querySelector('#guide-modal') as HTMLElement;
+        const openGuideLink = container.querySelector('#open-guide-link') as HTMLAnchorElement;
+        const closeGuideBtn = container.querySelector('#guide-modal-close') as HTMLButtonElement;
+
+        openGuideLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            guideModal.style.display = 'flex';
+        });
+
+        closeGuideBtn.addEventListener('click', () => {
+            guideModal.style.display = 'none';
+        });
+
+        guideModal.addEventListener('click', (e) => {
+            if (e.target === guideModal) guideModal.style.display = 'none';
+        });
 
         function updateUI() {
             const allPresent = 'crimson.paq' in files && 'sfx.paq' in files;

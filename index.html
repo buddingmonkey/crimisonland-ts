@@ -270,6 +270,116 @@
       cursor: not-allowed;
       opacity: 0.6;
     }
+
+    /* Purchase info text */
+    .upload-purchase-info {
+      font-size: 0.85rem;
+      color: #888;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .upload-purchase-info a {
+      color: #cc2222;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .upload-purchase-info a:hover {
+      color: #e04040;
+      text-decoration: underline;
+    }
+
+    /* Guide modal overlay */
+    .guide-modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+    }
+
+    .guide-modal {
+      position: relative;
+      max-width: 520px;
+      width: 90%;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 2rem;
+      color: #ddd;
+      font-family: 'Inter', sans-serif;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    .guide-modal-close {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .guide-modal-close:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .guide-modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+
+    .guide-modal-body {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: #ccc;
+    }
+
+    .guide-modal-body p {
+      margin-bottom: 0.75rem;
+    }
+
+    .guide-modal-body ol {
+      padding-left: 1.25rem;
+      margin: 0;
+    }
+
+    .guide-modal-body li {
+      margin-bottom: 0.5rem;
+    }
+
+    .guide-modal-body code {
+      background: #2a2a2a;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.85em;
+      color: #e8a0a0;
+    }
+
+    .guide-modal-body a {
+      color: #cc2222;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .guide-modal-body a:hover {
+      text-decoration: underline;
+      color: #e04040;
+    }
   </style>
 </head>
 
