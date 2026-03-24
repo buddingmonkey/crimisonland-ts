@@ -26,8 +26,6 @@ Thumbs.db
 .env
 .env.local
 
-# Copyrighted game assets (not for public distribution)
-# Use content/* (not content/) so the negation for music/ works —
-# a trailing-slash ignore prevents git from descending into the dir at all.
-content/*
-!content/music/
+# Copyrighted game assets at project root (not for public distribution)
+# Music lives in public/content/music/ and is tracked normally.
+/content/
