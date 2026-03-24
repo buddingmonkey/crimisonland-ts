@@ -10,6 +10,7 @@ import { GameState, GameMode } from '../../Game';
 import { gameConsole } from '../../console/Console';
 import type { GrimInterface } from '../../engine/GrimInterface';
 import { KeyCode } from '../../engine/KeyCodes';
+import { trackMenuNavigate, trackGameStart } from '../../analytics/Analytics';
 
 export interface MenuInputContext {
     grim: GrimInterface;
@@ -68,6 +69,7 @@ export function handleMenuStateInput(ctx: MenuInputContext): MenuInputResult {
     const action = mainMenu.update(grim.getDeltaTime(), menuInput);
     if (action === MenuAction.StartGame) {
         mainMenu.showPlayMenu();
+        trackMenuNavigate('play');
         gameConsole.print('Play menu opened');
     } else if (
         action === MenuAction.PlayTutorial ||
@@ -103,9 +105,11 @@ export function handleMenuStateInput(ctx: MenuInputContext): MenuInputResult {
 
         // Initialize game (creates player, resets systems)
         ctx.startGame();
+        trackGameStart(GameMode[newGameMode].toLowerCase());
         gameConsole.print(`Game started! Mode: ${GameMode[newGameMode]}`);
     } else if (action === MenuAction.PlayQuests) {
         mainMenu.showQuestScreen();
+        trackMenuNavigate('quests');
         gameConsole.print('Quest selection screen opened');
     } else if (action === MenuAction.StartQuest) {
         const { tier, index } = mainMenu.getSelectedQuest();
@@ -127,17 +131,21 @@ export function handleMenuStateInput(ctx: MenuInputContext): MenuInputResult {
         ctx.regenerateTerrain(tier);
 
         ctx.startGame();
+        trackGameStart('quest', `${tier}-${index}`);
         gameConsole.print(`Quest ${tier}-${index} started!`);
     } else if (action === MenuAction.Options) {
         mainMenu.showOptions();
+        trackMenuNavigate('options');
         gameConsole.print('Options menu opened');
     } else if (action === MenuAction.Statistics) {
         newState = GameState.Statistics;
         statisticsScreen.show();
+        trackMenuNavigate('statistics');
         gameConsole.print('Statistics opened');
     } else if (action === MenuAction.Credits) {
         newState = GameState.Credits;
         ctx.creditsScreen.show();
+        trackMenuNavigate('credits');
         gameConsole.print('Credits screen opened');
     } else if (action === MenuAction.Quit) {
         window.close();

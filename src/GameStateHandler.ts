@@ -5,6 +5,7 @@
  */
 
 import { gameConsole } from './console/Console';
+import { trackGamePause, trackGameResume, trackPerkSelected, trackQuestAction, trackSurvivalAction } from './analytics/Analytics';
 import { KeyCode } from './engine/KeyCodes';
 import { GameState, GameMode } from './GameTypes';
 import { PerkId, PERK_META } from './systems/PerkSystem';
@@ -146,6 +147,7 @@ export class GameStateHandler {
                 // Escape to pause
                 if (ctx.grim.isKeyPressed(KeyCode.Escape)) {
                     ctx.state = GameState.Paused;
+                    trackGamePause();
                     ctx.screens.pauseMenu.show();
                 }
 
@@ -162,6 +164,9 @@ export class GameStateHandler {
                 });
                 if (pauseResult.newState !== undefined) {
                     ctx.state = pauseResult.newState;
+                    if (pauseResult.newState === GameState.Playing) {
+                        trackGameResume();
+                    }
                 }
                 break;
             }
@@ -499,6 +504,7 @@ export class GameStateHandler {
 
             // Get perk name for feedback
             const perkName = PERK_META[perkId]?.name || 'Unknown';
+            trackPerkSelected(perkId, perkName, ctx.player?.level ?? 0);
             gameConsole.print(`Selected perk: ${perkName}`);
         }
     }
@@ -593,15 +599,18 @@ export class GameStateHandler {
 
         switch (action) {
             case GameOverAction.PlayAgain:
+                trackSurvivalAction('play_again');
                 ctx.screens.gameOverScreen.hide();
                 ctx.startGame(); // Restart same mode
                 break;
             case GameOverAction.HighScores:
+                trackSurvivalAction('high_scores');
                 this.returnFromStatistics = GameState.GameOver;
                 ctx.screens.leaderboardScreen.show();
                 ctx.state = GameState.Statistics;
                 break;
             case GameOverAction.MainMenu:
+                trackSurvivalAction('main_menu');
                 ctx.screens.gameOverScreen.hide();
                 ctx.state = GameState.Menu;
                 ctx.systems.musicSystem.play('crimson_theme.ogg');
@@ -635,6 +644,7 @@ export class GameStateHandler {
 
         switch (action) {
             case QuestFailedAction.PlayAgain: {
+                trackQuestAction('retry', questSystem.getStageMajor(), questSystem.getStageMinor());
                 ctx.screens.questFailedScreen.hide();
                 ctx.questFailRetryCount++;
                 // Re-initialize quest system (C: game_state_pending = 9 → quest_start_selected)
@@ -657,6 +667,7 @@ export class GameStateHandler {
                 break;
             }
             case QuestFailedAction.PlayAnother:
+                trackQuestAction('play_another', questSystem.getStageMajor(), questSystem.getStageMinor());
                 ctx.screens.questFailedScreen.hide();
                 ctx.questFailRetryCount = 0;
                 ctx.state = GameState.Menu;
@@ -666,6 +677,7 @@ export class GameStateHandler {
                 ctx.screens.mainMenu.showQuestScreen(); // Then open quest selection
                 break;
             case QuestFailedAction.MainMenu:
+                trackQuestAction('main_menu', questSystem.getStageMajor(), questSystem.getStageMinor());
                 ctx.screens.questFailedScreen.hide();
                 ctx.questFailRetryCount = 0;
                 ctx.state = GameState.Menu;

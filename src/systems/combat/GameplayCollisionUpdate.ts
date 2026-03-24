@@ -20,6 +20,8 @@ import { GameState, GameMode } from '../../Game';
 import { getPerkUnlockRegistry } from '../PerkUnlockRegistry';
 import { gameConsole } from '../../console/Console';
 import { getWeaponStats } from '../../data/WeaponData';
+import { trackLevelUp, trackWeaponPickup, trackBonusPickup, trackQuestFail } from '../../analytics/Analytics';
+import { BonusType } from '../../entities/Bonus';
 
 export interface CollisionUpdateContext {
     player: Player;
@@ -169,6 +171,12 @@ export function processCollisionsAndKills(
     const hasTelekinetic = perkSystem.hasPerk(PerkId.TELEKINETIC);
     const pickedUpBonuses = bonusSystem.checkPickups(player, hasTelekinetic);
     for (const bonus of pickedUpBonuses) {
+        // Track bonus pickup analytics
+        if (bonus.type === BonusType.WEAPON) {
+            const wpnStats = getWeaponStats(bonus.amount);
+            trackWeaponPickup(wpnStats.name, bonus.amount);
+        }
+        trackBonusPickup(BonusType[bonus.type]?.toLowerCase() ?? 'unknown');
         ctx.applyBonusEffect(bonus);
         // Pickup particles now spawned inside applyBonusEffect (BonusEffects.ts)
     }
@@ -194,6 +202,7 @@ export function processCollisionsAndKills(
             player.level++;
             perkPendingCount++;
             levelledUp = true;
+            trackLevelUp(player.level, GameMode[gameMode]?.toLowerCase() ?? 'unknown');
             // Play level up sound (C: sfx_play(sfx_ui_levelup) @ line 5887)
             soundSystem.play(SoundId.UI_LEVEL_UP);
             // Trigger level up banner animation
@@ -273,6 +282,16 @@ export function processCollisionsAndKills(
 
         if (gameMode === GameMode.Quest) {
             newState = GameState.QuestFailed;
+            const currentQuest = questSystem.getCurrentQuest();
+            if (currentQuest) {
+                trackQuestFail(
+                    currentQuest.tier,
+                    currentQuest.index,
+                    currentQuest.name,
+                    Math.floor(questSystem.getTimelineMs()),
+                    scoreSystem.getKills(),
+                );
+            }
             ctx.questFailedScreen.show({
                 score: Math.floor(questSystem.getTimelineMs()), // C: quest score = timeline time (int), not kill points
                 frags: scoreSystem.getKills(),

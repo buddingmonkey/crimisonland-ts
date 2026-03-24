@@ -5,6 +5,7 @@
  */
 
 import { gameConsole } from './console/Console';
+import { trackSurvivalEnd } from './analytics/Analytics';
 import { KeyCode } from './engine/KeyCodes';
 import { GameState, GameMode } from './GameTypes';
 import { questSystem } from './systems/quest/QuestSystem';
@@ -328,6 +329,10 @@ export function updatePlaying(ctx: GamePlayingContext, dt: number): void {
         ctx.state = collisionResult.newState;
         // Fade out to black on game over / quest failed (C: screen_fade_alpha → 1.0)
         if (collisionResult.isGameOver) {
+            const kills = ctx.systems.scoreSystem.getKills();
+            const score = ctx.systems.scoreSystem.getScore();
+            const elapsed = Math.floor(ctx.systems.scoreSystem.getSurvivalTime() * 1000);
+            trackSurvivalEnd(GameMode[ctx.gameMode].toLowerCase(), elapsed, kills, score);
             ctx.screenFade.fadeOut(3.0); // C: frame_dt * 3.0 rate
         }
     }

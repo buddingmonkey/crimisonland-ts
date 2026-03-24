@@ -8,6 +8,7 @@
  */
 
 import { QuestMeta, QuestSpawnEntry, EnemyTemplate, getQuest } from '../../data/QuestData';
+import { trackQuestStart } from '../../analytics/Analytics';
 import { gameConsole } from '../../console/Console';
 import type { SoundSystem } from '../../audio/SoundSystem';
 import { SoundId } from '../../audio/SoundId';
@@ -160,6 +161,8 @@ export class QuestSystem {
 
         gameConsole.print(`Started quest: ${quest.name} (Tier ${tier}, Quest ${index})`);
         gameConsole.print(`Time limit: ${quest.timeLimitMs / 1000}s, Spawns: ${quest.spawns.length}`);
+
+        trackQuestStart(tier, index, quest.name, this.failRetryCount > 0);
 
         return true;
     }

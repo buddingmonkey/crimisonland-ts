@@ -1,4 +1,5 @@
 import { type Player } from '../../entities/Player';
+import { trackQuestComplete, trackQuestAction } from '../../analytics/Analytics';
 import { type ScoreSystem } from '../ScoreSystem';
 import { type EnemySpawner } from '../enemy/EnemySpawner';
 import { type MusicSystem } from '../../audio/MusicSystem';
@@ -135,6 +136,8 @@ export function handleQuestCompletion(ctx: QuestFlowContext): void {
         questIndex: quest.index,
     });
 
+    trackQuestComplete(quest.tier, quest.index, quest.name, baseTimeMs, finalTimeMs, frags);
+
     // Reset quest system (but keep game world visible in background)
     questSystem.reset();
 }
@@ -166,6 +169,7 @@ export function updateQuestCompleteScreen(ctx: QuestFlowContext): QuestFlowResul
         case QuestCompleteAction.PlayNext: {
             // Read data BEFORE hide() — hide() nullifies this.data
             const qData = questCompleteScreen.getData();
+            trackQuestAction('play_next', qData?.questTier ?? 0, qData?.questIndex ?? 0);
             questCompleteScreen.hide();
             if (qData && qData.questTier && qData.questIndex) {
                 let nextTier = qData.questTier;
@@ -203,6 +207,7 @@ export function updateQuestCompleteScreen(ctx: QuestFlowContext): QuestFlowResul
         case QuestCompleteAction.Replay: {
             // Read data BEFORE hide() — hide() nullifies this.data
             const replayData = questCompleteScreen.getData();
+            trackQuestAction('replay', replayData?.questTier ?? 0, replayData?.questIndex ?? 0);
             questCompleteScreen.hide();
             gameConsole.print('Replaying quest...');
             newGameMode = GameMode.Quest;
@@ -225,7 +230,9 @@ export function updateQuestCompleteScreen(ctx: QuestFlowContext): QuestFlowResul
             break;
         }
 
-        case QuestCompleteAction.MainMenu:
+        case QuestCompleteAction.MainMenu: {
+            const menuData = questCompleteScreen.getData();
+            trackQuestAction('main_menu', menuData?.questTier ?? 0, menuData?.questIndex ?? 0);
             questCompleteScreen.hide();
             newGameMode = GameMode.Survival;
             newState = GameState.Menu;
@@ -233,18 +240,25 @@ export function updateQuestCompleteScreen(ctx: QuestFlowContext): QuestFlowResul
             mainMenu.hidePlayMenu();
             musicSystem.play('crimson_theme.ogg');
             break;
+        }
 
-        case QuestCompleteAction.HighScores:
+        case QuestCompleteAction.HighScores: {
+            const hsData = questCompleteScreen.getData();
+            trackQuestAction('high_scores', hsData?.questTier ?? 0, hsData?.questIndex ?? 0);
             ctx.leaderboardScreen.show();
             newState = GameState.Statistics;
             break;
+        }
 
-        case QuestCompleteAction.ShowEndNote:
+        case QuestCompleteAction.ShowEndNote: {
+            const endData = questCompleteScreen.getData();
+            trackQuestAction('show_end_note', endData?.questTier ?? 0, endData?.questIndex ?? 0);
             // C: game_state_pending = 0x15 → credits/end-note screen after final quest (5-10)
             questCompleteScreen.hide();
             gameConsole.print('All quests complete! Showing end note / credits.');
             newState = GameState.Credits;
             break;
+        }
     }
 
     return { newState, newGameMode, perkPendingCount };

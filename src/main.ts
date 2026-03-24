@@ -12,6 +12,7 @@ import { Game, GameState } from './Game';
 import { gameConsole } from './console/Console';
 import { hasStoredAssets, getStoredAsset, storeAsset } from './data/AssetStorage';
 import { showUploadScreen } from './ui/screens/AssetUploadScreen';
+import { trackAssetUploadStart, trackAssetUploadComplete } from './analytics/Analytics';
 
 /**
  * Check if PAQ files are available via the dev server (Vite).
@@ -45,18 +46,21 @@ async function main() {
 
             if (crimsonPaq && sfxPaq) {
                 preloadedAssets = { crimsonPaq, sfxPaq };
+                trackAssetUploadComplete('cached');
             }
         }
 
         if (!preloadedAssets) {
             // Show upload screen and wait for user to provide files
             console.log('Showing asset upload screen...');
+            trackAssetUploadStart();
             const files = await showUploadScreen();
 
             // Store in IndexedDB for next time
             await storeAsset('crimson.paq', files.crimsonPaq);
             await storeAsset('sfx.paq', files.sfxPaq);
             console.log('Assets stored in IndexedDB');
+            trackAssetUploadComplete('upload');
 
             preloadedAssets = files;
         }

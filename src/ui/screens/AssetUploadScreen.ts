@@ -91,7 +91,7 @@ export function showUploadScreen(): Promise<UploadResult> {
                                 <li>In the <a href="https://www.gog.com/en/game/crimsonland" target="_blank" rel="noopener noreferrer">GOG web page</a> or <strong>GOG Galaxy</strong> interface, navigate to your games and open the Crimsonland page.</li>
                                 <li>Select the <strong>Extras</strong> tab and download <strong>&ldquo;Crimsonland &ndash; Crimsonland Classic&rdquo;</strong>.</li>
                                 <li>Run the installer: <code>setup_crimsonland_classic_2.0.0.4.exe</code></li>
-                                <li>When installation completes, open the folder you selected during setup.<br/>Typically: <code>C:\GOG Games\Crimsonland Classic</code></li>
+                                <li>When installation completes, open the folder you selected during setup.<br/>Typically: <code>C:\\GOG Games\\Crimsonland Classic</code></li>
                                 <li>The <code>crimson.paq</code> and <code>sfx.paq</code> files will be in that folder.</li>
                             </ol>
                         </div>
